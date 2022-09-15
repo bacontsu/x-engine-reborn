@@ -1,3 +1,0 @@
-D:\dani stuff\c#\xEngine\xEngine\obj\Debug\xEngine.csproj.AssemblyReference.cache
-D:\dani stuff\c#\xEngine\xEngine\obj\Debug\xEngine.csproj.SuggestedBindingRedirects.cache
-D:\dani stuff\c#\xEngine\xEngine\obj\Debug\xEngine.csproj.CoreCompileInputs.cache
