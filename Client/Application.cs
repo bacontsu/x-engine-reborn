@@ -1,10 +1,17 @@
 ﻿using NetCoreServer;
+using System.Diagnostics;
 
 namespace Client
 {
     class MainApp
     {
-        public static void Main()
+        public static bool bHasInitialized = false;
+        public static float flOldTime;
+        public static float flNewTime;
+        public static float flFrameTime = 0.0f;
+
+        // Engine Initialization
+        public static void xEngine_Initialize()
         {
             Console.WriteLine("       ______             _            ");
             Console.WriteLine("      |  ____|           (_)           ");
@@ -17,24 +24,61 @@ namespace Client
             Console.WriteLine("-------------------------------------------------------------------------");
 
             Console.Write("\nWelcome to xEngine Console!, start typing your commands in here:");
+        }
 
-            // Perform text input
-            for (; ; )
+        // Engine Update, returning true to this function will stop the engine
+        public static bool xEngine_Update()
+        {
+            // Console stuff, need to be moved somewhere else
+            if (!Networking.bIsConnected)
             {
                 Console.Write("\n>  ");
                 string line = Console.ReadLine();
+
                 if (string.IsNullOrEmpty(line))
-                    break;
+                    return true;
 
                 switch (line)
                 {
                     case "connect": Networking.ConnectToServer("127.0.0.1", 1111); break;
                     default: Console.WriteLine($"command {line} cannot be found"); break;
                 }
-
-
-
             }
+
+
+            Networking.NetworkUpdate();
+
+
+            return false;
+        }
+
+        // Engine Shutdown
+        public static void xEngine_Shutdown()
+        {
+            
+        }
+
+        // Main Application Function
+        public static void Main()
+        {
+            // Engine Initialization
+            if (!bHasInitialized) 
+                xEngine_Initialize();
+
+            // forever loop, getting out from this loop meant exiting the application
+            for (; ; )
+            {
+                flNewTime = DateTime.Now.Millisecond;
+
+                if (xEngine_Update()) break;
+                //Console.WriteLine(flFrameTime);
+
+                flFrameTime = flNewTime - flOldTime;
+                flOldTime = flNewTime;
+            }
+
+            // Engine closing
+            xEngine_Shutdown();
 
         }
     }
