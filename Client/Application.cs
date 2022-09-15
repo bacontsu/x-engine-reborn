@@ -24,11 +24,15 @@ namespace Client
             Console.WriteLine("-------------------------------------------------------------------------");
 
             Console.Write("\nWelcome to xEngine Console!, start typing your commands in here:");
+
+            Renderer.Initialize();
         }
 
         // Engine Update, returning true to this function will stop the engine
         public static bool xEngine_Update()
         {
+            flNewTime = DateTime.Now.Millisecond;
+            /*
             // Console stuff, need to be moved somewhere else
             if (!Networking.bIsConnected)
             {
@@ -44,11 +48,13 @@ namespace Client
                     default: Console.WriteLine($"command {line} cannot be found"); break;
                 }
             }
-
+            */
 
             Networking.NetworkUpdate();
+            Renderer.Draw();
 
-
+            flFrameTime = flNewTime - flOldTime;
+            flOldTime = flNewTime;
             return false;
         }
 
@@ -66,17 +72,8 @@ namespace Client
                 xEngine_Initialize();
 
             // forever loop, getting out from this loop meant exiting the application
-            for (; ; )
-            {
-                flNewTime = DateTime.Now.Millisecond;
-
-                if (xEngine_Update()) break;
-                //Console.WriteLine(flFrameTime);
-
-                flFrameTime = flNewTime - flOldTime;
-                flOldTime = flNewTime;
-            }
-
+            while (!xEngine_Update()) { }
+      
             // Engine closing
             xEngine_Shutdown();
 
