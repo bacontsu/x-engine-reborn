@@ -20,19 +20,20 @@ namespace Client
 
         protected override void OnConnected()
         {
-            Console.WriteLine($"Chat TCP client connected a new session with Id {Id}");
+            Console.WriteLine($"Connected With Server! ID: {Id}");
         }
 
         protected override void OnDisconnected()
         {
-            Console.WriteLine($"Chat TCP client disconnected a session with Id {Id}");
-
+            Console.WriteLine($"Dropped from server");
+            /*
             // Wait for a while...
             Thread.Sleep(1000);
 
             // Try to connect again
             if (!_stop)
                 ConnectAsync();
+            */
         }
 
         protected override void OnReceived(byte[] buffer, long offset, long size)
@@ -42,7 +43,7 @@ namespace Client
 
         protected override void OnError(SocketError error)
         {
-            Console.WriteLine($"Chat TCP client caught an error with code {error}");
+            Console.WriteLine($"[ERROR]: {error}");
         }
 
         private bool _stop;
@@ -50,18 +51,8 @@ namespace Client
 
     class Networking
     {
-        static void Main(string[] args)
+        public static void ConnectToServer(string address, int port)
         {
-            // TCP server address
-            string address = "127.0.0.1";
-            if (args.Length > 0)
-                address = args[0];
-
-            // TCP server port
-            int port = 1111;
-            if (args.Length > 1)
-                port = int.Parse(args[1]);
-
             Console.WriteLine($"TCP server address: {address}");
             Console.WriteLine($"TCP server port: {port}");
 
@@ -94,7 +85,7 @@ namespace Client
                 }
 
                 // Send the entered text to the chat server
-                client.SendAsync(line);
+                client.SendAsync($"[{client.Id}] " + line);
             }
 
             // Disconnect the client

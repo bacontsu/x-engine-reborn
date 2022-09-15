@@ -27,7 +27,7 @@ namespace Server
         protected override void OnReceived(byte[] buffer, long offset, long size)
         {
             string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
-            Console.WriteLine("Incoming: " + message);
+            Console.WriteLine(message);
 
             // Multicast message to all connected sessions
             Server.Multicast(message);
@@ -95,7 +95,7 @@ namespace Server
                 }
 
                 // Multicast admin message to all sessions
-                line = "(admin) " + line;
+                line = "[SERVER] " + line;
                 server.Multicast(line);
             }
 
